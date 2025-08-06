@@ -1,0 +1,241 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:06.000
+Everyone wants to build GPT rappers, micro SAS. I get it. It's super super sexy. 
+
+00:00:06.000 --> 00:00:11.000
+But there's a huge opportunity right now to be using AI for boring businesses.
+
+00:00:11.000 --> 00:00:19.000
+I brought on the boring marketer and he shares the story of how in less than 24 hours, he ranked one of his boring businesses on Google in the top three spots for multiple target keywords and made thousands of dollars.
+
+00:00:19.000 --> 00:00:24.000
+and Claude Code did 100% of the work.
+
+00:00:24.000 --> 00:00:31.000
+And this is an exact tutorial with how to make money for boring businesses with AI.
+
+00:00:31.000 --> 00:00:36.000
+And he shares why he thinks that's where the money is. Enjoy the episode.
+
+00:00:52.000 --> 00:00:57.000
+We got the boring marketer on the pod, James. by the end of this podcast, what are people going to learn?
+
+00:00:57.000 --> 00:01:03.000
+So, I kind of had a a revelation that, you know, everyone's building like agents and workflows and rappers and SAS tools,
+
+00:01:03.000 --> 00:01:09.000
+but I feel like everyone's ignoring like businesses in their backyard.
+
+00:01:09.000 --> 00:01:16.000
+So, I want to talk about what I think is like a multi-billion dollar arbitrage opportunity uh to build a local service business.
+
+00:01:16.000 --> 00:01:22.000
+Okay. So, boring businesses in the AJI. That's right. That's right.
+
+00:01:22.000 --> 00:01:29.000
+Okay. And then tactically what are people going to learn here? Yeah. So, uh, we were having a couple discussions on X and some people chimed in with some replies.
+
+00:01:29.000 --> 00:01:34.000
+Uh, one of the things that I'm astounded by is people still want to learn how to set up like their development environment with Cloud Code.
+
+00:01:34.000 --> 00:01:40.000
+So, we're going to briefly go through that. Just some questions and some things to do in terms of prompting to make sure you're set up the right way.
+
+00:01:40.000 --> 00:01:46.000
+Then we're going to talk about how I was able to build this website in just a couple hours and perfectly match up my Figma design files.
+
+00:01:46.000 --> 00:01:52.000
+A lot of people struggle with, you know, getting nice designs uh with their AI tools that don't feel like AI made it.
+
+00:01:52.000 --> 00:01:59.000
+So, we're going to go through that process. And then most importantly, we're going to talk about how I optimized this website for local search
+
+00:01:59.000 --> 00:02:04.000
+uh for local search and actually started generating revenue within 24 hours of making updates to the site itself.
+
+00:02:04.000 --> 00:02:11.000
+Within 24 hours, making thousands of dollars of revenue, which is insane.
+
+00:02:11.000 --> 00:02:17.000
+Yeah. So, I can't wait to to just see how you did it. Let's uh let's let's get into it.
+
+00:02:17.000 --> 00:02:22.000
+Cool. So, uh, the story here, um, I have a lot of friends that have boring businesses,
+
+00:02:22.000 --> 00:02:30.000
+you know, things that are outside of tech and startups and AI and stuff like that. And one of my friends has a small trucking company.
+
+00:02:30.000 --> 00:02:36.000
+So, he just ships goods from like, you know, Charleston to Charlotte and and back and forth and all that.
+
+00:02:36.000 --> 00:02:43.000
+And his truck uh, is used. It was breaking down and he kept running into these like mechanical problems.
+
+00:02:43.000 --> 00:02:50.000
+So, he found a local mechanic, started kind of building a relationship with him, and he thought, "Hey, maybe we should start a service that, you know, helps trucks get back on the road."
+
+00:02:50.000 --> 00:02:55.000
+And, uh, he came to me and he was like, "Hey, like, you know, I'm really good at operating and I've got, you know, the mechanic and I know this business,
+
+00:02:55.000 --> 00:03:01.000
+but I don't really know how to like get a website going, get the marketing going for it. Would you like to partner up on this?"
+
+00:03:01.000 --> 00:03:08.000
+And I was like, you know, that sounds pretty interesting. And it rang a couple like bells in my mind for a few reasons.
+
+00:03:08.000 --> 00:03:14.000
+One reason being all right like this might sound a little bit crazy, but what if like we have like an AGI takeoff by 2030 or something like that,
+
+00:03:14.000 --> 00:03:20.000
+you know, and digital services and SAS and all this stuff is like super super disrupted, you know.
+
+00:03:20.000 --> 00:03:26.000
+Um that that is a real possibility. So I was like, okay, there might be a barbell strategy here to where you can kind of like hedge against that
+
+00:03:26.000 --> 00:03:33.000
+as like a multireneur as as you kind of coined the term, right? So maybe on one side of the barbell, I've got, you know, my service businesses online,
+
+00:03:33.000 --> 00:03:39.000
+I've got my SAS tools, I've got my community, and on the other side, I'm a partner in some like boring businesses that have a high degree of defensibility
+
+00:03:39.000 --> 00:03:44.000
+against being completely disrupted by AI. So, I don't think in the next 5 years there's going to be robots going down major highways
+
+00:03:44.000 --> 00:03:50.000
+coming to fix like, you know, heavy duty tractor trailers and and stuff like that.
+
+00:03:50.000 --> 00:03:56.000
+So, I think that has some staying power and that's going to be a continued need for some time.
+
+00:03:56.000 --> 00:04:02.000
+So, I got thinking about that and I was like super interested to to get into it.
+
+00:04:02.000 --> 00:04:08.000
+Cool. Yeah. Let's let's let's let's see what uh what you did. All right. Cool. So, I'll I'll do a quick tour around the website real quick
+
+00:04:08.000 --> 00:04:14.000
+and just kind of show you the structure and what I was able to do. So, you know, you have kind of like your basic homepage.
+
+00:04:14.000 --> 00:04:20.000
+Uh we've got some nice little like illustrations and things like that. We've got like, you know, a bunch of clickable items that take you into like individual services
+
+00:04:20.000 --> 00:04:26.000
+and all of that stuff. Uh we've got all these different location pages and uh you know, we have some other like SEO optimizations on the website.
+
+00:04:26.000 --> 00:04:32.000
+uh like all these handy internal links and stuff like that. So, if you look at uh some of these pages,
+
+00:04:32.000 --> 00:04:38.000
+uh I have like a huge amount of detail on all of these about each individual location.
+
+00:04:38.000 --> 00:04:44.000
+I've got like landmarks and you know, unique information about these locations that uh we can service and and things along those lines.
+
+00:04:44.000 --> 00:04:50.000
+Um, now an SEO agency or a digital marketing agency would charge you an arm and a leg to go and like build out a website,
+
+00:04:50.000 --> 00:04:56.000
+create 50 plus pages, optimize the entire thing so that it'll rank for uh the keywords that are relevant to your company.
+
+00:04:56.000 --> 00:05:02.000
+Uh, using Claude Code, I was able to do all of this in a matter of hours.
+
+00:05:02.000 --> 00:05:08.000
+So, actually, I did it over the weekend. It took me around four hours or so to get the site live, to do months worth of SEO work and push it live.
+
+00:05:08.000 --> 00:05:14.000
+And as you mentioned at the beginning, uh you know, this actually started generating thousands of dollars of revenue yesterday.
+
+00:05:14.000 --> 00:05:20.000
+This phone started blowing up and now the mechanics basically fully booked up for the next few days.
+
+00:05:20.000 --> 00:05:26.000
+So that's like real vibe marketing ROI. Uh you know, just using Claude code, which I think is kind of mind-blowing
+
+00:08:20.000 --> 00:08:27.000
+and um you know keyword research people can over complicate it they're like do I need this tool and that tool and like you know what variations and volume and all this stuff do I need to uh discover
+
+00:08:27.000 --> 00:08:33.000
+and oftentimes to get like analysis paralysis you know so here's a way that you can like bypass all of that and this is the vibe marketing way
+
+00:08:33.000 --> 00:08:39.000
+so open up chatpt 03 or claude or whatever and just say hey here's my website here's what I'm trying to do
+
+00:08:39.000 --> 00:08:45.000
+give me a list of like 25 to 50 keywords that I can optimize my website around that's all you need to do really
+
+00:08:45.000 --> 00:08:51.000
+like you know for a local market especially, you don't need to worry about like all this different like volume and uh you know keyword metrics
+
+00:08:51.000 --> 00:08:57.000
+and competition level and and stuff like that. I think a lot of people get hung up on it.
+
+00:08:57.000 --> 00:09:03.000
+So just want to clarify that all you have to do is ask AI what keywords you should focus on for your website.
+
+00:09:03.000 --> 00:09:09.000
+All right. So um I had to kind of analyze the keywords for uh search intent and buying stage.
+
+00:09:09.000 --> 00:09:15.000
+And what I mean by that is um are these folks like looking for repairs and service like right now?
+
+00:09:15.000 --> 00:09:21.000
+You know, I wanted to find out what keywords are are that type where somebody's willing to like pick up their phone and and give this company a call
+
+00:09:21.000 --> 00:09:27.000
+and which ones are just kind of like looking for information and stuff like that.
+
+00:09:27.000 --> 00:09:33.000
+So, when you get started, especially for like a boring business, you want to tap into uh those search terms where people are ready to like pull out their credit card
+
+00:09:33.000 --> 00:09:39.000
+or ready to have you come out to their site or or wherever the work is happening.
+
+00:09:39.000 --> 00:09:45.000
+So, that's what I kind of dialed in on. Okay. So, uh you can see that here like uh we we have a few different categories of search terms that AI gave us.
+
+00:09:45.000 --> 00:09:51.000
+We have emergency keywords, service keywords, problem keywords, and local keywords.
+
+00:09:51.000 --> 00:09:57.000
+So I found that all of these were pretty high intent and they seem to be good ones to focus on.
+
+00:09:57.000 --> 00:10:03.000
+Um so the other thing that you need to think about is uh SEO is all about really demand and supply.
+
+00:10:03.000 --> 00:10:09.000
+I mean that's really one simple way to think about it. Um so demand is what people are searching for and you can think of supply as like landing pages on your website.
+
+00:10:09.000 --> 00:10:15.000
+All right. So for each one of these search terms that related to a specific service that the company can do and any of the locationoriented terms,
+
+00:10:15.000 --> 00:10:21.000
+I ended up building out dedicated pages for each and every one of those.
+
+00:10:21.000 --> 00:10:27.000
+We'll we'll talk about that in a bit when we get into the uh the vibe coding aspect of this.
+
+00:10:27.000 --> 00:10:33.000
+So find your keywords, map them to the intent, and make sure that you know they just kind of make sense and don't overthink it.
+
+00:10:33.000 --> 00:10:39.000
+All right. Um, so the next step is, uh, you know, I already had this website built out. We'll talk about how I built that.
+
+00:10:39.000 --> 00:10:45.000
+But then, uh, I went into a SEO audit. So, I asked Claude Code, uh, where I built the site, hey, go through this website in extreme detail.
+
+00:10:45.000 --> 00:10:51.000
+Ultra think about this. You can use the ultra think command. So, it'll spend extra time. use Opus, really go deep and do sort of some deep research
+
+00:10:51.000 --> 00:10:57.000
+and find all the technical and onpage SEO issues and opportunities that we can fix together so that I can dominate the local market.
+
+00:10:57.000 --> 00:11:03.000
+So, it went through it found out, hey, you don't have these files that help Google understand what the site is all about.
+
+00:11:03.000 --> 00:11:09.000
+It's slow to load. uh you can optimize the speed, you can make it snappier, you need to include schema markup and some of these other technical things
+
+00:11:09.000 --> 00:11:15.000
+so that Google knows exactly what your website does and then uh once you find them you can just say fix them.
