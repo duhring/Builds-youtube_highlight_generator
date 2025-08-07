@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Highlights - Test a new feature</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        h1 { text-align: center; font-size: 2.5rem; margin-bottom: 10px; }
+        .description { text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1rem; }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .highlight-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .card-thumbnail {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .card-content { padding: 20px; }
+        .card-summary { font-size: 1rem; line-height: 1.6; margin-bottom: 15px; }
+        .card-timestamp { color: #666; font-size: 0.9rem; font-weight: 500; margin-bottom: 15px; }
+        .transcript-toggle {
+            font-weight: 500;
+            color: #667eea;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom 0.2s ease;
+        }
+        .transcript-toggle:hover { border-bottom: 1px solid #667eea; }
+        .transcript-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Video Highlights</h1>
+        <p class="description">Test a new feature</p>
+
+        <div class="video-container">
+            <div id="player"></div>
+        </div>
+
+        <div class="highlights-grid">
+
+            <div class="highlight-card">
+                <img src="thumbnail_001.png" alt="Thumbnail for segment starting at 00:07"
+                     class="card-thumbnail" onclick="seekTo(7)">
+                <div class="card-content">
+                    <p class="card-timestamp">Starts at: 00:07</p>
+                    <p class="card-summary">Let's start with an introduction to what machine learning actually means.</p>
+                    <div class="transcript-toggle" onclick="toggleTranscript('transcript-0')">
+                        Show Transcript
+                    </div>
+                    <div class="transcript-content" id="transcript-0">
+                        <p>Let's start with an introduction to what machine learning actually means. Machine learning is a subset of artificial intelligence that enables computers to learn. The learning happens without being explicitly programmed for every scenario. Instead, algorithms identify patterns in data and make predictions. Now let's discuss the methodology we'll use throughout this course. We'll follow a structured approach that builds knowledge systematically.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-card">
+                <img src="thumbnail_002.png" alt="Thumbnail for segment starting at 01:46"
+                     class="card-thumbnail" onclick="seekTo(106)">
+                <div class="card-content">
+                    <p class="card-timestamp">Starts at: 01:46</p>
+                    <p class="card-summary">Finally, let's wrap up with some key conclusions.</p>
+                    <div class="transcript-toggle" onclick="toggleTranscript('transcript-1')">
+                        Show Transcript
+                    </div>
+                    <div class="transcript-content" id="transcript-1">
+                        <p>Finally, let's wrap up with some key conclusions. Machine learning is a powerful tool but requires careful application. Understanding the fundamentals is crucial for building effective solutions. Practice with diverse datasets will strengthen your skills. Remember that machine learning is just one part of the data science process. Domain expertise and good data are equally important for success.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-card">
+                <img src="thumbnail_003.png" alt="Thumbnail for segment starting at 01:26"
+                     class="card-thumbnail" onclick="seekTo(86)">
+                <div class="card-content">
+                    <p class="card-timestamp">Starts at: 01:26</p>
+                    <p class="card-summary">Let me demonstrate these concepts with a practical example.</p>
+                    <div class="transcript-toggle" onclick="toggleTranscript('transcript-2')">
+                        Show Transcript
+                    </div>
+                    <div class="transcript-content" id="transcript-2">
+                        <p>Let me demonstrate these concepts with a practical example. We'll use a real dataset to show machine learning in action. This demo will illustrate the entire machine learning pipeline. From data preprocessing to model evaluation and deployment. Pay attention to the common pitfalls and best practices. Finally, let's wrap up with some key conclusions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-card">
+                <img src="thumbnail_004.png" alt="Thumbnail for segment starting at 00:00"
+                     class="card-thumbnail" onclick="seekTo(0)">
+                <div class="card-content">
+                    <p class="card-timestamp">Starts at: 00:00</p>
+                    <p class="card-summary">Welcome to this comprehensive tutorial on machine learning fundamentals.</p>
+                    <div class="transcript-toggle" onclick="toggleTranscript('transcript-3')">
+                        Show Transcript
+                    </div>
+                    <div class="transcript-content" id="transcript-3">
+                        <p>Welcome to this comprehensive tutorial on machine learning fundamentals. Today we'll explore the key concepts that form the foundation of modern AI. Let's start with an introduction to what machine learning actually means. Machine learning is a subset of artificial intelligence that enables computers to learn. The learning happens without being explicitly programmed for every scenario. Instead, algorithms identify patterns in data and make predictions. Now let's discuss the methodology we'll use throughout this course. We'll follow a structured approach that builds knowledge systematically. First, we'll cover theoretical foundations and mathematical concepts. Then we'll move into practical implementations using Python. Finally, we'll work on real-world projects to solidify understanding. The first major topic is supervised learning algorithms. These algorithms learn from labeled training data. Common examples include linear regression and decision trees. We'll implement each algorithm from scratch to understand the mechanics. This hands-on approach helps build intuition about how they work. Next, we'll explore unsupervised learning techniques. Unlike supervised learning, these work with unlabeled data. Clustering algorithms like K-means are popular examples. They help discover hidden patterns and structure in datasets. Dimensionality reduction is another important unsupervised technique.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        var player;
+        function onYouTubeIframeAPIReady() {{
+            player = new YT.Player('player', {{
+                height: '100%',
+                width: '100%',
+                videoId: '{video_id}',
+                playerVars: {{
+                    'playsinline': 1
+                }},
+                events: {{
+                    'onReady': onPlayerReady
+                }}
+            }});
+        }}
+
+        function onPlayerReady(event) {{
+            // Player is ready
+        }}
+
+        function seekTo(seconds) {{
+            if (player && typeof player.seekTo === 'function') {{
+                player.seekTo(seconds, true);
+                window.scrollTo({{ top: 0, behavior: 'smooth' }});
+            }}
+        }}
+
+        function toggleTranscript(id) {{
+            var element = document.getElementById(id);
+            var toggle = element.previousElementSibling;
+            if (element.style.display === "none" || element.style.display === "") {{
+                element.style.display = "block";
+                toggle.textContent = "Hide Transcript";
+            }} else {{
+                element.style.display = "none";
+                toggle.textContent = "Show Transcript";
+            }}
+        }}
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>

@@ -54,6 +54,7 @@ class Segment:
     summary: str
     thumbnail_path: str
     youtube_link: str
+    transcript_text: str
 
 class TranscriptParser:
     """Handles parsing of WebVTT and SRT transcript files."""
@@ -334,7 +335,6 @@ class HTMLGenerator:
     def generate_page(youtube_url: str, segments: List[Segment], output_dir: str, description: str = ""):
         """Generate complete HTML page with CSS and JavaScript."""
         
-        # Extract video ID from YouTube URL
         video_id = HTMLGenerator._extract_video_id(youtube_url)
         
         html_content = f"""<!DOCTYPE html>
@@ -344,19 +344,14 @@ class HTMLGenerator:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Highlights - {description}</title>
     <style>
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-        
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #333;
         }}
-        
         .container {{
             max-width: 1200px;
             margin: 0 auto;
@@ -365,33 +360,18 @@ class HTMLGenerator:
             padding: 30px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }}
-        
-        h1 {{
-            text-align: center;
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-            font-weight: 700;
-        }}
-        
-        .description {{
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-        }}
-        
+        h1 {{ text-align: center; font-size: 2.5rem; margin-bottom: 10px; }}
+        .description {{ text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1rem; }}
         .video-container {{
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%;
             margin-bottom: 40px;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }}
-        
-        .video-container iframe {{
+        #player {{
             position: absolute;
             top: 0;
             left: 0;
@@ -399,83 +379,51 @@ class HTMLGenerator:
             height: 100%;
             border: none;
         }}
-        
         .highlights-grid {{
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
-            margin-top: 20px;
         }}
-        
         .highlight-card {{
             background: white;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
+            transition: all 0.3s ease;
         }}
-        
         .highlight-card:hover {{
             transform: translateY(-5px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }}
-        
         .card-thumbnail {{
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
-            background: #f0f0f0;
+            cursor: pointer;
         }}
-        
-        .card-content {{
-            padding: 20px;
-        }}
-        
-        .card-summary {{
-            color: #333;
-            font-size: 1rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }}
-        
-        .card-timestamp {{
-            color: #666;
-            font-size: 0.9rem;
+        .card-content {{ padding: 20px; }}
+        .card-summary {{ font-size: 1rem; line-height: 1.6; margin-bottom: 15px; }}
+        .card-timestamp {{ color: #666; font-size: 0.9rem; font-weight: 500; margin-bottom: 15px; }}
+        .transcript-toggle {{
             font-weight: 500;
-        }}
-        
-        .card-link {{
+            color: #667eea;
+            cursor: pointer;
             display: inline-block;
             margin-top: 10px;
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 20px;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom 0.2s ease;
+        }}
+        .transcript-toggle:hover {{ border-bottom: 1px solid #667eea; }}
+        .transcript-content {{
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
             font-size: 0.9rem;
-            font-weight: 500;
-            transition: transform 0.2s ease;
-        }}
-        
-        .card-link:hover {{
-            transform: scale(1.05);
-        }}
-        
-        @media (max-width: 768px) {{
-            .container {{
-                padding: 20px;
-                margin: 10px;
-            }}
-            
-            h1 {{
-                font-size: 2rem;
-            }}
-            
-            .highlights-grid {{
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }}
+            line-height: 1.5;
+            max-height: 150px;
+            overflow-y: auto;
         }}
     </style>
 </head>
@@ -485,30 +433,30 @@ class HTMLGenerator:
         {f'<p class="description">{description}</p>' if description else ''}
         
         <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/{video_id}" 
-                    allowfullscreen>
-            </iframe>
+            <div id="player"></div>
         </div>
         
         <div class="highlights-grid">
 """
         
-        # Add cards for each segment
         for i, segment in enumerate(segments):
             thumbnail_filename = Path(segment.thumbnail_path).name
             start_minutes = int(segment.start_time // 60)
             start_seconds = int(segment.start_time % 60)
             
             html_content += f"""
-            <div class="highlight-card" onclick="window.open('{segment.youtube_link}', '_blank')">
-                <img src="{thumbnail_filename}" alt="Video thumbnail" class="card-thumbnail" 
-                     onerror="this.style.display='none'">
+            <div class="highlight-card">
+                <img src="{thumbnail_filename}" alt="Thumbnail for segment starting at {start_minutes:02d}:{start_seconds:02d}"
+                     class="card-thumbnail" onclick="seekTo({int(segment.start_time)})">
                 <div class="card-content">
+                    <p class="card-timestamp">Starts at: {start_minutes:02d}:{start_seconds:02d}</p>
                     <p class="card-summary">{segment.summary}</p>
-                    <p class="card-timestamp">Starts at {start_minutes:02d}:{start_seconds:02d}</p>
-                    <a href="{segment.youtube_link}" class="card-link" target="_blank">
-                        Watch Segment
-                    </a>
+                    <div class="transcript-toggle" onclick="toggleTranscript('transcript-{i}')">
+                        Show Transcript
+                    </div>
+                    <div class="transcript-content" id="transcript-{i}">
+                        <p>{segment.transcript_text}</p>
+                    </div>
                 </div>
             </div>
 """
@@ -516,6 +464,47 @@ class HTMLGenerator:
         html_content += """
         </div>
     </div>
+
+    <script>
+        var player;
+        function onYouTubeIframeAPIReady() {{
+            player = new YT.Player('player', {{
+                height: '100%',
+                width: '100%',
+                videoId: '{video_id}',
+                playerVars: {{
+                    'playsinline': 1
+                }},
+                events: {{
+                    'onReady': onPlayerReady
+                }}
+            }});
+        }}
+
+        function onPlayerReady(event) {{
+            // Player is ready
+        }}
+
+        function seekTo(seconds) {{
+            if (player && typeof player.seekTo === 'function') {{
+                player.seekTo(seconds, true);
+                window.scrollTo({{ top: 0, behavior: 'smooth' }});
+            }}
+        }}
+
+        function toggleTranscript(id) {{
+            var element = document.getElementById(id);
+            var toggle = element.previousElementSibling;
+            if (element.style.display === "none" || element.style.display === "") {{
+                element.style.display = "block";
+                toggle.textContent = "Hide Transcript";
+            }} else {{
+                element.style.display = "none";
+                toggle.textContent = "Show Transcript";
+            }}
+        }}
+    </script>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
 """
@@ -625,7 +614,8 @@ def main():
                 end_time=end_time,
                 summary=summary,
                 thumbnail_path=thumbnail_path,
-                youtube_link=youtube_link
+                youtube_link=youtube_link,
+                transcript_text=segment_text
             )
             segments.append(segment)
         
