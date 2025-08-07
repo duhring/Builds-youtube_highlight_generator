@@ -39,6 +39,12 @@ except ImportError:
     HAS_TRANSFORMERS = False
     print("Warning: transformers not available. Using fallback summarization.")
 
+try:
+    from youtube_transcript_api import YouTubeTranscriptApi
+except ImportError:
+    print("Warning: youtube-transcript-api not available. Automatic transcript download will not work.")
+    print("Please run: pip install youtube-transcript-api")
+
 @dataclass
 class TranscriptEntry:
     """Represents a single caption entry with timing."""
@@ -535,10 +541,42 @@ class HTMLGenerator:
         
         raise ValueError(f"Cannot extract video ID from URL: {youtube_url}")
 
+def download_transcript(video_id: str, output_path: Path) -> bool:
+    """Download transcript and save as a VTT file."""
+    try:
+        transcript_list = YouTubeTranscriptApi().list_transcripts(video_id)
+        transcript = transcript_list.find_transcript(['en'])
+        transcript_data = transcript.fetch()
+
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write("WEBVTT\n\n")
+            for item in transcript_data:
+                start = item['start']
+                end = start + item['duration']
+
+                start_h, start_rem = divmod(start, 3600)
+                start_m, start_s = divmod(start_rem, 60)
+
+                end_h, end_rem = divmod(end, 3600)
+                end_m, end_s = divmod(end_rem, 60)
+
+                start_time = f"{int(start_h):02}:{int(start_m):02}:{start_s:06.3f}"
+                end_time = f"{int(end_h):02}:{int(end_m):02}:{end_s:06.3f}"
+
+                f.write(f"{start_time} --> {end_time}\n")
+                f.write(f"{item['text']}\n\n")
+
+        print(f"Transcript downloaded successfully to {output_path}")
+        return True
+    except Exception as e:
+        print(f"Could not download transcript: {e}")
+        return False
+
 def main():
     parser = argparse.ArgumentParser(description='Generate YouTube highlight page')
     parser.add_argument('youtube_url', help='YouTube video URL')
-    parser.add_argument('transcript_file', help='Path to transcript file (.vtt or .srt)')
+    parser.add_argument('transcript_file', nargs='?', default=None, help='Path to transcript file (.vtt or .srt)')
+    parser.add_argument('--download-transcript', action='store_true', help='Automatically download transcript')
     parser.add_argument('--description', default='', help='Description for the page')
     parser.add_argument('--keywords', nargs='*', default=[], help='Keywords to search for segments')
     parser.add_argument('--cards', type=int, default=4, help='Number of highlight cards to generate')
@@ -556,6 +594,18 @@ def main():
         # Parse transcript
         print("📝 Parsing transcript...")
         transcript_path = args.transcript_file
+
+        if args.download_transcript:
+            video_id = HTMLGenerator._extract_video_id(args.youtube_url)
+            transcript_path = f"{video_id}.vtt"
+            if not download_transcript(video_id, Path(transcript_path)):
+                print("Could not download transcript, please provide a file.")
+                sys.exit(1)
+
+        if not transcript_path:
+            print("Error: Transcript file not provided and not downloaded. Please provide a transcript file path or use --download-transcript.")
+            sys.exit(1)
+
         file_ext = Path(transcript_path).suffix.lower()
         
         if file_ext == '.vtt':

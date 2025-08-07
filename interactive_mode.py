@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 import re
+from youtube_transcript_api import YouTubeTranscriptApi
 from generate_video_cards import (
     TranscriptParser,
     SegmentFinder,
@@ -132,6 +133,37 @@ def get_user_input(prompt: str, default: str = "") -> str:
                 print("This field is required.")
         return response
 
+def download_transcript(video_id: str, output_path: Path) -> bool:
+    """Download transcript and save as a VTT file."""
+    try:
+        transcript_list = YouTubeTranscriptApi().list_transcripts(video_id)
+        transcript = transcript_list.find_transcript(['en'])
+        transcript_data = transcript.fetch()
+
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write("WEBVTT\n\n")
+            for item in transcript_data:
+                start = item['start']
+                end = start + item['duration']
+
+                start_h, start_rem = divmod(start, 3600)
+                start_m, start_s = divmod(start_rem, 60)
+
+                end_h, end_rem = divmod(end, 3600)
+                end_m, end_s = divmod(end_rem, 60)
+
+                start_time = f"{int(start_h):02}:{int(start_m):02}:{start_s:06.3f}"
+                end_time = f"{int(end_h):02}:{int(end_m):02}:{end_s:06.3f}"
+
+                f.write(f"{start_time} --> {end_time}\n")
+                f.write(f"{item['text']}\n\n")
+
+        print(f"Transcript downloaded successfully to {output_path}")
+        return True
+    except Exception as e:
+        print(f"Could not download transcript: {e}")
+        return False
+
 def main():
     """Main function to run the interactive highlight generation."""
     print("🎬 Welcome to the Interactive YouTube Highlight Generator!")
@@ -147,15 +179,27 @@ def main():
 
         # 1. Get YouTube URL
         youtube_url = get_user_input("Enter the YouTube video URL")
+        try:
+            video_id = HTMLGenerator._extract_video_id(youtube_url)
+        except ValueError as e:
+            print(f"Error: {e}")
+            sys.exit(1)
 
         # 2. Get transcript file
-        while True:
-            transcript_path_str = get_user_input("Enter the path to your transcript file (.vtt or .srt)")
-            transcript_path = Path(transcript_path_str)
-            if transcript_path.is_file() and transcript_path.suffix.lower() in ['.vtt', '.srt']:
-                break
-            else:
-                print("❌ Invalid file path or format. Please provide a valid .vtt or .srt file.")
+        transcript_path = None
+        if get_user_input("Automatically download transcript (y/n)?", "y").lower() == 'y':
+            transcript_path_str = f"{video_id}.vtt"
+            if download_transcript(video_id, Path(transcript_path_str)):
+                transcript_path = Path(transcript_path_str)
+
+        if not transcript_path:
+            while True:
+                transcript_path_str = get_user_input("Enter the path to your transcript file (.vtt or .srt)")
+                transcript_path = Path(transcript_path_str)
+                if transcript_path.is_file() and transcript_path.suffix.lower() in ['.vtt', '.srt']:
+                    break
+                else:
+                    print("❌ Invalid file path or format. Please provide a valid .vtt or .srt file.")
 
         # 3. Get description
         description = get_user_input("Enter a description for the highlight page (optional)")

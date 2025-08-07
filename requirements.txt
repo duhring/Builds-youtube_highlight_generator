@@ -2,3 +2,4 @@ pytube
 moviepy
 pillow
 numpy
+youtube-transcript-api
