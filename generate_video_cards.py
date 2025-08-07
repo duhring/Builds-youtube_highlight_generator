@@ -17,6 +17,13 @@ from dataclasses import dataclass
 from urllib.parse import urlparse, parse_qs
 import logging
 
+# Import transcript converter functions
+try:
+    from transcript_converter import parse_pasted_transcript, create_vtt_file
+    HAS_TRANSCRIPT_CONVERTER = True
+except ImportError:
+    HAS_TRANSCRIPT_CONVERTER = False
+
 # Third-party imports (will be installed via requirements.txt)
 try:
     from pytube import YouTube
@@ -546,16 +553,149 @@ class HTMLGenerator:
         
         raise ValueError(f"Cannot extract video ID from URL: {youtube_url}")
 
+def create_transcript_interactively():
+    """Create a transcript file from pasted text."""
+    print("\n📝 Create Transcript from Pasted Text")
+    print("=" * 45)
+    print("Supported formats:")
+    print("  • 0:15 Some text here")
+    print("  • 1:23:45 Some text here") 
+    print("  • [0:15] Some text here")
+    print("  • 0:15 - Some text here")
+    print("  • 0:15: Some text here")
+    print("\nPaste your transcript below (press Ctrl+D when done):")
+    print("-" * 45)
+    
+    # Read multiline input
+    lines = []
+    try:
+        while True:
+            line = input()
+            lines.append(line)
+    except EOFError:
+        pass
+    
+    text = '\n'.join(lines)
+    
+    if not text.strip():
+        print("❌ No transcript text provided")
+        sys.exit(1)
+    
+    # Parse the transcript
+    print("\n🔍 Parsing transcript...")
+    entries = parse_pasted_transcript(text)
+    
+    if not entries:
+        print("❌ No valid timestamp entries found")
+        print("Make sure your transcript includes timestamps in a supported format")
+        sys.exit(1)
+    
+    print(f"   Found {len(entries)} entries")
+    
+    # Get output filename
+    filename = input("Enter transcript filename (default: 'created_transcript.vtt'): ").strip()
+    if not filename:
+        filename = "created_transcript.vtt"
+    
+    if not filename.endswith('.vtt'):
+        filename += '.vtt'
+    
+    # Create the file
+    create_vtt_file(entries, filename)
+    return filename
+
+def get_interactive_input():
+    """Get input interactively from user."""
+    print("🎬 YouTube Highlight Generator - Interactive Setup")
+    print("=" * 55)
+    
+    # Get YouTube URL
+    youtube_url = input("Enter YouTube URL: ").strip()
+    if not youtube_url:
+        print("Error: YouTube URL is required")
+        sys.exit(1)
+    
+    # Get transcript file
+    print("\nTranscript options:")
+    transcript_files = [f for f in os.listdir('.') if f.endswith(('.vtt', '.srt'))]
+    
+    options = []
+    if transcript_files:
+        for i, file in enumerate(transcript_files, 1):
+            print(f"  {i}. {file}")
+            options.append(('file', file))
+    
+    next_num = len(options) + 1
+    if HAS_TRANSCRIPT_CONVERTER:
+        print(f"  {next_num}. Create transcript from pasted text")
+        options.append(('create', None))
+        next_num += 1
+    
+    print(f"  {next_num}. Enter custom file path")
+    options.append(('custom', None))
+    
+    try:
+        choice = int(input(f"\nSelect option (1-{len(options)}): "))
+        if 1 <= choice <= len(options):
+            option_type, file_path = options[choice - 1]
+            
+            if option_type == 'file':
+                transcript_file = file_path
+            elif option_type == 'create':
+                transcript_file = create_transcript_interactively()
+            else:  # custom
+                transcript_file = input("Enter transcript file path: ").strip()
+        else:
+            transcript_file = input("Enter transcript file path: ").strip()
+    except ValueError:
+        transcript_file = input("Enter transcript file path: ").strip()
+    
+    if not transcript_file or not os.path.exists(transcript_file):
+        print("Error: Valid transcript file is required")
+        sys.exit(1)
+    
+    # Get optional parameters
+    description = input("Enter video description (optional): ").strip()
+    
+    keywords_input = input("Enter keywords separated by spaces (optional): ").strip()
+    keywords = keywords_input.split() if keywords_input else []
+    
+    try:
+        cards = int(input("Number of highlight cards to generate (default 4): ").strip() or "4")
+    except ValueError:
+        cards = 4
+    
+    output_dir = input("Output directory (default 'output'): ").strip() or "output"
+    
+    return {
+        'youtube_url': youtube_url,
+        'transcript_file': transcript_file,
+        'description': description,
+        'keywords': keywords,
+        'cards': cards,
+        'output_dir': output_dir
+    }
+
 def main():
     parser = argparse.ArgumentParser(description='Generate YouTube highlight page')
-    parser.add_argument('youtube_url', help='YouTube video URL')
-    parser.add_argument('transcript_file', help='Path to transcript file (.vtt or .srt)')
+    parser.add_argument('youtube_url', nargs='?', help='YouTube video URL')
+    parser.add_argument('transcript_file', nargs='?', help='Path to transcript file (.vtt or .srt)')
     parser.add_argument('--description', default='', help='Description for the page')
     parser.add_argument('--keywords', nargs='*', default=[], help='Keywords to search for segments')
     parser.add_argument('--cards', type=int, default=4, help='Number of highlight cards to generate')
     parser.add_argument('--output-dir', default='output', help='Output directory')
     
     args = parser.parse_args()
+    
+    # If required arguments are missing, get them interactively
+    if not args.youtube_url or not args.transcript_file:
+        interactive_args = get_interactive_input()
+        args.youtube_url = interactive_args['youtube_url']
+        args.transcript_file = interactive_args['transcript_file']
+        args.description = interactive_args['description']
+        args.keywords = interactive_args['keywords']
+        args.cards = interactive_args['cards']
+        args.output_dir = interactive_args['output_dir']
     
     # Setup logging
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
