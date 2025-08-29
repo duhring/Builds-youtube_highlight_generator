@@ -12,6 +12,10 @@ A powerful tool that automatically creates beautiful highlight pages from YouTub
 4. **Extracts Thumbnails** - Generates representative frames for each segment
 5. **Builds Static Site** - Creates a beautiful HTML page ready for Netlify deployment
 
+![Input Cature](2-Console.png)
+
+![Input Cature](3-Output.png)
+
 ## 🚀 Quick Start
 
 ### Installation
