@@ -2,6 +2,8 @@
 
 A powerful tool that automatically creates beautiful highlight pages from YouTube videos and their transcripts. Perfect for educational content, presentations, and creating shareable video summaries that can be deployed to Netlify.
 
+![Input Cature](1-Input-capture.png)
+
 ## 🎯 What It Does
 
 1. **Parses Transcripts** - Supports WebVTT (.vtt) and SRT (.srt) formats
